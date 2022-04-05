@@ -37,8 +37,9 @@ link* appendElem(link* p, Course elem) {
 
 link* insertElem(link* p, Course elem, int add) {
 	link* temp = p;//创建临时结点temp
+	int i; 
 	//首先找到要插入位置的上一个结点
-	for (int i = 1; i < add; i++) {
+	for (i = 1; i < add; i++) {
 		if (temp == NULL) {
 			printf("插入位置无效\n");
 			return p;
@@ -59,8 +60,9 @@ link* insertElem(link* p, Course elem, int add) {
 
 link* delElem(link* p, int add) {
 	link* temp = p;
+	int i;
 	//遍历到被删除结点的上一个结点
-	for (int i = 1; i < add; i++) {
+	for (i = 1; i < add; i++) {
 		temp = temp->next;
 	}
 	link* del = temp->next;//单独设置一个指针指向被删除结点，以防丢失
@@ -72,7 +74,8 @@ link* delElem(link* p, int add) {
 
 link* updateElem(link* p, int add, Course newElem) {
 	link* temp = p;
-	for (int i = 0; i < add; i++) {
+	int i;
+	for (i = 0; i < add; i++) {
 		temp = temp->next;
 	}
 	temp->elem = newElem;

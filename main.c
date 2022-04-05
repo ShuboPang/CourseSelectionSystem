@@ -14,7 +14,7 @@
 static link* course_link = NULL;
 static linkStudent* student_link = NULL;
 
-void ShowTitle(char* title) {
+void ShowTitle(const char* title) {
 	system("CLS");
 	printf("----------------------------------------------------------------------\n");
 	printf(" 		%s 作者:非虫电子设计                         \n", title);
@@ -38,10 +38,9 @@ void InputErrorTip() {
 	printf("----------------------------------------------------------------------\n");
 	printf(" 		输入错误                      \n");
 	printf("----------------------------------------------------------------------\n");
-
 	printf("\n");
 	printf("\n");
-	printf("输入任意值返回上一层\n");
+	printf("输入任意数字回上一层\n");
 	scanf("%d", &a);
 }
 
@@ -84,12 +83,40 @@ int SelectionCourseOption_display() {
 	ShowTitle("学生选课结果");
 	printf("编号  学生姓名  英文名字  课程编号1  课程编号2  课程编号3  课程编号4  已选课程数量  总学分 \n");
 	linkStudent* s = student_link;
+	linkStudent* student_temp = student_link;
+	int n = 0; 
 	while (s)
 	{
-		printf("%d %s %s %d %d %d %d %d %d\n", s->elem.index, s->elem.name, s->elem.english_name,
-			s->elem.course[0], s->elem.course[1],
-			s->elem.course[2], s->elem.course[3], s->elem.course_num, s->elem.total);
+		n++;
 		s = s->next;
+	}
+	if(n == 0){
+		printf("暂无学生，请先添加学生\n");
+	} else {
+		int i, j;
+		// 冒泡排序 
+	    for (i = 0; i < n; ++i) {
+	        // 之前的循环已经将i个元素送到末尾，不需要再次比较，故减去，因为跟后一个元素比较，为了避免溢出，故减一
+	        for (j = 0; j < n - i - 1; ++j) {
+	            // 如果当前的元素比后一个元素小，就交换
+	            if (student_temp->elem.total > student_temp->next->elem.total) 
+				{
+	                s = student_temp;
+	            }
+	            else if(student_temp->elem.total < student_temp->next->elem.total){
+					s = student_temp->next;
+				}
+				else if(student_temp->elem.total == student_temp->next->elem.total)
+				{
+					if(strcmp(student_temp->elem.english_name, student_temp->next->elem.english_name) > 0){
+						s = student_temp->next;
+					}
+				}
+	        }
+			printf("%d 	  %s 	%s 	 %d 	%d 		%d 		%d 		%d 		%d\n", s->elem.index, s->elem.name, s->elem.english_name,
+				s->elem.course[0], s->elem.course[1],
+				s->elem.course[2], s->elem.course[3], s->elem.course_num, s->elem.total);
+	    }
 	}
 	printf("--------------------------------------------------------------------------------------------\n");
 	printf("\n");
@@ -105,7 +132,8 @@ int electionCourseOption_sel() {
 	link* s = course_link;
 	while (s)
 	{
-		printf("%d %s %d %d %d %d %d %d %d\n", s->elem.index, s->elem.name, s->elem.type,
+		printf("%d 		%s 		%d 		%d 		%d 		%d 		%d    %d     %d\n",
+			s->elem.index, s->elem.name, s->elem.type,
 			s->elem.total_time, s->elem.teach_time,
 			s->elem.test_time, s->elem.credit, s->elem.person_num, s->elem.num);
 		s = s->next;
@@ -123,7 +151,7 @@ START_SEL:
 	Student st;
 	memset(&st, 0, sizeof(Student));
 	memcpy(&st.name, &stu, sizeof(stu));
-	sprintf(&st.english_name, "%s", "null");
+	sprintf(st.english_name, "%s", "null");
 
 	if (student_link == NULL) {
 		student_link = initLink_student(st);
@@ -161,8 +189,8 @@ START_SEL:
 			printf("请重新操作!\n");
 			goto GOTO_MENU;
 		}
-
-		for (size_t i = 0; i < st.course_num; i++)
+		int i;
+		for (i = 0; i < st.course_num; i++)
 		{
 			if (st.course[i] == c.index) {
 				printf("已选择过该课程，不能重复选择！\n");
@@ -183,7 +211,6 @@ START_SEL:
 		st.total += c.credit;
 		updateElemByName_student(student_link, st.name, st);
 		SaveStudentFile();
-
 		printf("选课成功!!\n");
 	}
 GOTO_MENU:
@@ -227,31 +254,30 @@ int CourseOption() {
 	ShowTitle("课程操作");
 	printf("		1. 显示所有课程 \n");
 	printf("		2. 修改课程 \n");
-	printf("		3. 插入课程 \n");
+	printf("		3. 增加课程 \n");
 	printf("		4. 删除课程 \n");
 	printf("		0. 退出课程管理 \n");
 	return ShowOptionSel();
 }
 
 /// <summary>
-/// 插入课程
+/// 增加课程
 /// </summary>
 /// <returns></returns>
 int CourseOption_insert() {
-	ShowTitle("插入课程");
+	ShowTitle("增加课程");
 	Course s;
 INSERT_COURSE:
 	memset(&s, 0, sizeof(Course));
 	printf("请按以下格式输入：\n");
-	printf("课程编号   课程名称 课程性质 总学时 授课学时 实验或上机学时  学分 课程容量 \n");
-	scanf("%d %s %d %d %d %d %d %d", &s.index, &s.name, &s.type,
+	printf("课程编号  课程名称 课程性质 总学时 授课学时 实验或上机学时  学分 课程容量 \n");
+	scanf("%d %s %d %d %d %d %d %d", &s.index, s.name, &s.type,
 		&s.total_time, &s.teach_time,
 		&s.test_time, &s.credit, &s.person_num);
 	s.num = 0;
 	if (course_link == NULL) {
 		course_link = initLink(s);
-	}
-	else {
+	} else {
 		Course tmp = getElemByCourseIndex(course_link, s.index);
 		if (tmp.index == -1) {
 			appendElem(course_link, s);
@@ -328,7 +354,8 @@ int DisplayShowCourse() {
 	link* s = course_link;
 	while (s)
 	{
-		printf("%d %s %d %d %d %d %d %d %d\n", s->elem.index, s->elem.name, s->elem.type,
+		printf("%d 		%s 		%d 		%d 		%d 		%d 		%d     %d    %d\n",
+			s->elem.index, s->elem.name, s->elem.type,
 			s->elem.total_time, s->elem.teach_time,
 			s->elem.test_time, s->elem.credit, s->elem.person_num, s->elem.num);
 		s = s->next;
@@ -339,7 +366,6 @@ int DisplayShowCourse() {
 	printf("输入任意值返回上一层\n");
 	return ShowOptionSel();
 }
-
 
 
 int main(int argc, char* argv[]) {
@@ -375,6 +401,9 @@ MAIN_MENU:
 		}
 		else if (substep == 4) {		//< 删除课程
 			CourseOption_delete();
+		}
+		else if (substep == 5) {
+			
 		}
 		else {
 			InputErrorTip();
