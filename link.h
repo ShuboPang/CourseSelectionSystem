@@ -12,7 +12,8 @@ typedef struct{
     int teach_time;
     int test_time;
     int credit;
-    int person_num;
+    int person_num;         //< 接纳人数
+    int num;                //< 选课人数
 }Course;
 
 // 链表节点
@@ -35,6 +36,9 @@ link* delElem(link* p, int add);
 
 // 更新结点的函数，newElem为新的数据域的值
 link* updateElem(link* p, int add, Course newElem);
+
+
+link* updateElemByCourseIndex(link* p, int course_index, Course newElem);
 
 // 求链表长度
 int getElemLength(link* p);

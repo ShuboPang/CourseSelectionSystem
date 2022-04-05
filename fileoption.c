@@ -19,9 +19,9 @@ int readFile(const char* fileName, link** course){
     rewind(fp);
     for(;;){
         Course s;
-        int ret = fscanf(fp, "%d %s %d %d %d %d %d %d\n", &s.index, &s.name, &s.type,
+        int ret = fscanf(fp, "%d %s %d %d %d %d %d %d %d\n", &s.index, &s.name, &s.type,
                          &s.total_time, &s.teach_time,
-                         &s.test_time,&s.credit,&s.person_num);
+                         &s.test_time,&s.credit,&s.person_num, &s.num);
         if(ret == EOF) {
             break;
         }
@@ -49,9 +49,9 @@ int writeFile(const char* fileName, link* course) {
     fseek(fp, 0, SEEK_SET);
     for(;;){
         Course s = temp->elem;
-            fprintf(fp, "%d %s %d %d %d %d %d %d\n", s.index, s.name, s.type,
+            fprintf(fp, "%d %s %d %d %d %d %d %d %d\n", s.index, s.name, s.type,
                          s.total_time, s.teach_time,
-                         s.test_time,s.credit,s.person_num);
+                         s.test_time,s.credit,s.person_num, s.num);
         temp = temp->next;
         if(temp == NULL) {
             break;

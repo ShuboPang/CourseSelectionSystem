@@ -107,18 +107,18 @@ Student getElem_student(linkStudent* p,int index){
     return c;
 }
 
-Student getElemByCourseIndex_student(linkStudent* p, int index) {
+Student getElemByName_student(linkStudent* p, const char* name) {
     Student c;
     c.index = -1;
     int count = 0;
     linkStudent* temp = p;
     while (p)
     {
-        if (p->elem.index == index) {
-            memcpy(&c, &(p->elem), sizeof(Student));
+        if(strcmp(name, temp->elem.name)){
+            memcpy(&c, &(temp->elem), sizeof(Student));
             break;
         }
-        p = p->next;
+        temp = temp->next;
         ++count;
     }
     return c;

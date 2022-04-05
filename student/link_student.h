@@ -46,6 +46,6 @@ Student getElem_student(linkStudent* p,int index);
 /// <param name="p"></param>
 /// <param name="index"></param>
 /// <returns></returns>
-Student getElemByCourseIndex_student(linkStudent* p, const char* name);
+Student getElemByName_student(linkStudent* p, const char* name);
 
 #endif

@@ -79,12 +79,25 @@ link* updateElem(link* p, int add, Course newElem) {
     return p;
 }
 
+link* updateElemByCourseIndex(link* p, int course_index, Course newElem) {
+    link* temp = p;
+    while (temp)
+    {
+        if (temp->elem.index == course_index) {
+            temp->elem = newElem;
+            break;
+        }
+        temp = temp->next;
+    }
+    return p;
+}
+
 int getElemLength(link* p){
     int count = 0;
     link* temp = p;
-    while (p)
+    while (temp)
     {
-        p = p->next;
+        temp = temp->next;
         ++count;
     }
     return count;
@@ -95,13 +108,13 @@ Course getElem(link* p,int index){
     c.index = -1;
     int count = 0;
     link* temp = p;
-    while (p)
+    while (temp)
     {
         if(count == index){
-            memcpy(&c,&(p->elem),sizeof(Course));
+            memcpy(&c,&(temp->elem),sizeof(Course));
             break;
         }
-        p = p->next;
+        temp = temp->next;
         ++count;
     }
     return c;
@@ -112,13 +125,13 @@ Course getElemByCourseIndex(link* p, int index) {
     c.index = -1;
     int count = 0;
     link* temp = p;
-    while (p)
+    while (temp)
     {
-        if (p->elem.index == index) {
-            memcpy(&c, &(p->elem), sizeof(Course));
+        if (temp->elem.index == index) {
+            memcpy(&c, &(temp->elem), sizeof(Course));
             break;
         }
-        p = p->next;
+        temp = temp->next;
         ++count;
     }
     return c;
