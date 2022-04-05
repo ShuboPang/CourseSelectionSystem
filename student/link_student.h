@@ -3,45 +3,47 @@
 
 
 
-// å­¦ç”Ÿä¿¡æ¯ç»“æ„ä½“ï¼Œç”¨äºå­˜å‚¨å­¦ç”ŸåŸºæœ¬ä¿¡æ¯
-typedef struct{
-    int index;
-    char name[128];
-    char english_name[128];
-    int course[4];
-    int course_num;
-    int total;
+// Ñ§ÉúĞÅÏ¢½á¹¹Ìå£¬ÓÃÓÚ´æ´¢Ñ§Éú»ù±¾ĞÅÏ¢
+typedef struct {
+	int index;
+	char name[128];
+	char english_name[128];
+	int course[4];
+	int course_num;
+	int total;
 }Student;
 
-// é“¾è¡¨èŠ‚ç‚¹
+// Á´±í½Úµã
 typedef struct LinkStudent {
-    Student  elem;
-    struct LinkStudent* next;
+	Student  elem;
+	struct LinkStudent* next;
 }linkStudent;
 
-// é“¾è¡¨åˆå§‹çš„å‡½æ•°ï¼Œç”¨äºåˆ›å»ºå¤´èŠ‚ç‚¹
+// Á´±í³õÊ¼µÄº¯Êı£¬ÓÃÓÚ´´½¨Í·½Úµã
 linkStudent* initLink_student(Student elem);
 
-// é“¾è¡¨æœ«å°¾æ·»åŠ çš„å‡½æ•°ï¼Œpæ˜¯é“¾è¡¨ï¼Œelemæ˜¯æ’å…¥çš„ç»“ç‚¹çš„æ•°æ®åŸŸ
+// Á´±íÄ©Î²Ìí¼ÓµÄº¯Êı£¬pÊÇÁ´±í£¬elemÊÇ²åÈëµÄ½áµãµÄÊı¾İÓò
 linkStudent* appendElem_student(linkStudent* p, Student elem);
 
-// é“¾è¡¨æ’å…¥çš„å‡½æ•°ï¼Œpæ˜¯é“¾è¡¨ï¼Œelemæ˜¯æ’å…¥çš„ç»“ç‚¹çš„æ•°æ®åŸŸï¼Œaddæ˜¯æ’å…¥çš„ä½ç½®
+// Á´±í²åÈëµÄº¯Êı£¬pÊÇÁ´±í£¬elemÊÇ²åÈëµÄ½áµãµÄÊı¾İÓò£¬addÊÇ²åÈëµÄÎ»ÖÃ
 linkStudent* insertElem_student(linkStudent* p, Student elem, int add);
 
-// åˆ é™¤ç»“ç‚¹çš„å‡½æ•°ï¼Œpä»£è¡¨æ“ä½œé“¾è¡¨ï¼Œaddä»£è¡¨åˆ é™¤èŠ‚ç‚¹çš„ä½ç½®
+// É¾³ı½áµãµÄº¯Êı£¬p´ú±í²Ù×÷Á´±í£¬add´ú±íÉ¾³ı½ÚµãµÄÎ»ÖÃ
 linkStudent* delElem_student(linkStudent* p, int add);
 
-// æ›´æ–°ç»“ç‚¹çš„å‡½æ•°ï¼ŒnewElemä¸ºæ–°çš„æ•°æ®åŸŸçš„å€¼
+// ¸üĞÂ½áµãµÄº¯Êı£¬newElemÎªĞÂµÄÊı¾İÓòµÄÖµ
 linkStudent* updateElem_student(linkStudent* p, int add, Student newElem);
 
-// æ±‚é“¾è¡¨é•¿åº¦
+linkStudent* updateElemByName_student(linkStudent* p, const char* name, Student newElem);
+
+// ÇóÁ´±í³¤¶È
 int getElemLength_student(linkStudent* p);
 
-// å–èŠ‚ç‚¹
-Student getElem_student(linkStudent* p,int index);
+// È¡½Úµã
+Student getElem_student(linkStudent* p, int index);
 
 /// <summary>
-///  æ ¹æ®è¯¾ç¨‹ç¼–å·è·å–è¯¾ç¨‹
+///  ¸ù¾İ¿Î³Ì±àºÅ»ñÈ¡¿Î³Ì
 /// </summary>
 /// <param name="p"></param>
 /// <param name="index"></param>

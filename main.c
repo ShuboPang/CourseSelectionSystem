@@ -14,20 +14,20 @@
 static link* course_link = NULL;
 static linkStudent* student_link = NULL;
 
-void ShowTitle(char* title){
+void ShowTitle(char* title) {
 	system("CLS");
 	printf("----------------------------------------------------------------------\n");
-	printf(" 		%s                          \n",title);
+	printf(" 		%s 作者:非虫电子设计                         \n", title);
 	printf("----------------------------------------------------------------------\n");
 	printf("\n");
 }
 
-int ShowOptionSel(){
+int ShowOptionSel() {
 	int a = 0;
 	printf("\n");
 	printf("\n");
 	printf("请选择操作：");
-	scanf("%d",&a);
+	scanf("%d", &a);
 	return a;
 }
 
@@ -50,7 +50,11 @@ void SaveCourseFile() {
 	writeFile(FILE_PATH, course_link);;
 }
 
-int FirstPage(){
+void SaveStudentFile() {
+	writeFile_student(FILE_STUDENT_PATH, student_link);
+}
+
+int FirstPage() {
 	ShowTitle("欢迎使用学生管理系统");
 	printf("		1. 进入选课 \n");
 	printf("		2. 课程操作 \n");
@@ -78,13 +82,24 @@ int SelectionCourseOption() {
 /// <returns></returns>
 int SelectionCourseOption_display() {
 	ShowTitle("学生选课结果");
-
-
-
+	printf("编号  学生姓名  英文名字  课程编号1  课程编号2  课程编号3  课程编号4  已选课程数量  总学分 \n");
+	linkStudent* s = student_link;
+	while (s)
+	{
+		printf("%d %s %s %d %d %d %d %d %d\n", s->elem.index, s->elem.name, s->elem.english_name,
+			s->elem.course[0], s->elem.course[1],
+			s->elem.course[2], s->elem.course[3], s->elem.course_num, s->elem.total);
+		s = s->next;
+	}
+	printf("--------------------------------------------------------------------------------------------\n");
+	printf("\n");
+	printf("\n");
+	printf("		0. 退出 \n");
 	return ShowOptionSel();
 }
 
 int electionCourseOption_sel() {
+
 	ShowTitle("开始选课");
 	printf("课程编号   课程名称 课程性质 总学时 授课学时 实验或上机学时  学分 课程容量 已选人数\n");
 	link* s = course_link;
@@ -95,16 +110,21 @@ int electionCourseOption_sel() {
 			s->elem.test_time, s->elem.credit, s->elem.person_num, s->elem.num);
 		s = s->next;
 	}
-	START_SEL:
+START_SEL:
 	printf("\n");
 	printf("\n");
 	printf("请输入学生姓名 课程编号\n");
 	char stu[128];
 	int course_index = 0;
 	scanf("%s %d", &stu, &course_index);
+
+
 	//< 检查学生
 	Student st;
+	memset(&st, 0, sizeof(Student));
 	memcpy(&st.name, &stu, sizeof(stu));
+	sprintf(&st.english_name, "%s", "null");
+
 	if (student_link == NULL) {
 		student_link = initLink_student(st);
 	}
@@ -114,34 +134,66 @@ int electionCourseOption_sel() {
 		if (tmp.index != -1) {
 			memcpy(&st, &tmp, sizeof(Student));
 		}
+		else {
+			appendElem_student(student_link, st);
+		}
 	}
 	Course c = getElemByCourseIndex(course_link, course_index);
 	if (st.course_num == 4) {
-		printf("该学生选课已经达到4个");
+		printf("该学生选课已经达到4个 \n");
+		printf("请重新操作!\n");
 		goto GOTO_MENU;
 	}
 	if (c.index == -1) {
-		printf("%d  课程不存在", course_index);
+		printf("%d  课程不存在 !\n", course_index);
+		printf("请重新操作!\n");
 	}
 	else {
+
 		if (c.num == c.person_num) {
-			printf("选本课的人数已满!");
+			printf("选本课的人数已满!\n");
+			printf("请重新操作!\n");
+			goto GOTO_MENU;
 		}
+
+		if (st.total + c.credit > 10) {
+			printf("总学分超过10分!\n");
+			printf("请重新操作!\n");
+			goto GOTO_MENU;
+		}
+
+		for (size_t i = 0; i < st.course_num; i++)
+		{
+			if (st.course[i] == c.index) {
+				printf("已选择过该课程，不能重复选择！\n");
+				printf("请重新操作!\n");
+				goto GOTO_MENU;
+				break;
+			}
+		}
+
+		// 课程状态更新
 		c.num++;
-		st.course[st.course_num] = c.index;
-		st.course_num++;
 		updateElemByCourseIndex(course_link, c.index, c);
 		SaveCourseFile();
+
+		// 学生状态更新
+		st.course[st.course_num] = c.index;
+		st.course_num++;
+		st.total += c.credit;
+		updateElemByName_student(student_link, st.name, st);
+		SaveStudentFile();
+
 		printf("选课成功!!\n");
 	}
-	GOTO_MENU:
+GOTO_MENU:
 	printf("		1. 继续选课 \n");
 	printf("		0. 退出 \n");
 	int ret = ShowOptionSel();
-	if(ret == 0){
+	if (ret == 0) {
 		return ret;
 	}
-	else if(ret == 1)
+	else if (ret == 1)
 	{
 		goto START_SEL;
 	}
@@ -155,13 +207,13 @@ int electionCourseOption_sel() {
 
 int SelectionCourse() {
 	int step = 0;
-	SELECTION_COURSE:
+SELECTION_COURSE:
 	step = SelectionCourseOption();
 	if (step == 0) {
 		return 0;
 	}
 	else if (step == 1) {
-		
+		SelectionCourseOption_display();
 	}
 	else if (step == 2) {
 		electionCourseOption_sel();
@@ -171,7 +223,7 @@ int SelectionCourse() {
 }
 
 /// 课程操作
-int CourseOption(){
+int CourseOption() {
 	ShowTitle("课程操作");
 	printf("		1. 显示所有课程 \n");
 	printf("		2. 修改课程 \n");
@@ -185,39 +237,49 @@ int CourseOption(){
 /// 插入课程
 /// </summary>
 /// <returns></returns>
-int CourseOption_insert(){
+int CourseOption_insert() {
 	ShowTitle("插入课程");
 	Course s;
+INSERT_COURSE:
+	memset(&s, 0, sizeof(Course));
 	printf("请按以下格式输入：\n");
 	printf("课程编号   课程名称 课程性质 总学时 授课学时 实验或上机学时  学分 课程容量 \n");
-	INSERT_COURSE:
 	scanf("%d %s %d %d %d %d %d %d", &s.index, &s.name, &s.type,
-                         &s.total_time, &s.teach_time,
-                         &s.test_time,&s.credit,&s.person_num);
+		&s.total_time, &s.teach_time,
+		&s.test_time, &s.credit, &s.person_num);
 	s.num = 0;
-	if(course_link == NULL) {
+	if (course_link == NULL) {
 		course_link = initLink(s);
-	} else {
-		appendElem(course_link, s);
-	} 
+	}
+	else {
+		Course tmp = getElemByCourseIndex(course_link, s.index);
+		if (tmp.index == -1) {
+			appendElem(course_link, s);
+		}
+		else {
+			printf("--------------------------------------------------------------------------------------------\n");
+			printf("课程编号冲突！\n");
+			printf("--------------------------------------------------------------------------------------------\n");
+		}
+	}
 	int a = 0;
-	INPUT_ERROR:
+INPUT_ERROR:
 	printf(" 	1:继续插入	\n");
 	printf(" 	0:返回上一层 \n");
 	printf("请选择操作：");
-	scanf("%d",&a);
-	if(a == 0){
+	scanf("%d", &a);
+	if (a == 0) {
 		SaveCourseFile();
 		return a;
 	}
-	else if(a == 1){
+	else if (a == 1) {
 		goto INSERT_COURSE;
 	}
 	goto INPUT_ERROR;
 }
 
 int CourseOption_delete() {
-	
+
 
 }
 
@@ -231,7 +293,7 @@ int CourseOption_update() {
 UPDATE_COURSE:
 	scanf("%d %s %d %d %d %d %d %d %d", &s.index, &s.name, &s.type,
 		&s.total_time, &s.teach_time,
-		&s.test_time, &s.credit, &s.person_num,&s.num);
+		&s.test_time, &s.credit, &s.person_num, &s.num);
 	c = getElemByCourseIndex(course_link, s.index);
 	if (c.index == -1) {
 		printf("%d  课程不存在", s.index);
@@ -241,7 +303,7 @@ UPDATE_COURSE:
 		SaveCourseFile();
 		printf("更新成功!!\n");
 	}
-	INPUT_ERROR:
+INPUT_ERROR:
 	printf(" 	1:继续更新	\n");
 	printf(" 	0:返回上一层 \n");
 	printf("请选择操作：");
@@ -259,36 +321,36 @@ UPDATE_COURSE:
 /// 显示所有课程
 /// </summary>
 /// <returns></returns>
-int DisplayShowCourse(){
+int DisplayShowCourse() {
 	ShowTitle("课程列表");
-	printf("课程总数 %d \n",getElemLength(course_link));
+	printf("课程总数 %d \n", getElemLength(course_link));
 	printf("课程编号   课程名称 课程性质 总学时 授课学时 实验或上机学时  学分 课程容量 已选人数\n");
 	link* s = course_link;
 	while (s)
 	{
 		printf("%d %s %d %d %d %d %d %d %d\n", s->elem.index, s->elem.name, s->elem.type,
 			s->elem.total_time, s->elem.teach_time,
-			s->elem.test_time, s->elem.credit, s->elem.person_num,s->elem.num);
+			s->elem.test_time, s->elem.credit, s->elem.person_num, s->elem.num);
 		s = s->next;
 	}
-
+	printf("--------------------------------------------------------------------------------------------\n");
 	printf("\n");
 	printf("\n");
 	printf("输入任意值返回上一层\n");
 	return ShowOptionSel();
-} 
+}
 
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
-	int step =0;
+	int step = 0;
 	int substep = 0;
-	readFile(FILE_PATH,&course_link);
-	readFile(FILE_STUDENT_PATH, &student_link);
+	readFile(FILE_PATH, &course_link);
+	readFile_student(FILE_STUDENT_PATH, &student_link);
 
 
-	MAIN_MENU:
+MAIN_MENU:
 	step = FirstPage();
 
 	switch (step)
@@ -297,24 +359,24 @@ int main(int argc, char *argv[]) {
 		SelectionCourse();
 		break;
 	case 2:
-		COURSE_OPTION:
+	COURSE_OPTION:
 		substep = CourseOption();
-		if(substep == 0){		//< 退出课程管理
+		if (substep == 0) {		//< 退出课程管理
 			break;
 		}
-		else if(substep == 1){		//< 显示所有课程
+		else if (substep == 1) {		//< 显示所有课程
 			DisplayShowCourse();
 		}
 		else if (substep == 2) {		//< 修改课程
 			CourseOption_update();
 		}
-		else if(substep == 3){		//< 插入课程
+		else if (substep == 3) {		//< 插入课程
 			CourseOption_insert();
 		}
 		else if (substep == 4) {		//< 删除课程
 			CourseOption_delete();
 		}
-		else{
+		else {
 			InputErrorTip();
 		}
 		goto COURSE_OPTION;

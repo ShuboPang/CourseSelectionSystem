@@ -2,10 +2,10 @@
 #define _FILEOPTION_STUDENT_H_
 #include "link_student.h"
 
-/// è¯»æ–‡ä»¶
+/// ¶ÁÎÄ¼þ
 int readFile_student(const char* fileName, linkStudent** stu);
 
-/// å†™æ–‡ä»¶
+/// Ð´ÎÄ¼þ
 int writeFile_student(const char* fileName, linkStudent* stu);
 
 #endif

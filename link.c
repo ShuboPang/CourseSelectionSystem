@@ -5,134 +5,134 @@
 #include <string.h>
 
 link* initLink(Course elem) {
-    link* p = (link*)malloc(sizeof(link));//åˆ›å»ºä¸€ä¸ªå¤´ç»“ç‚¹
-    if(p == NULL) {
-        return NULL;
-    }
-    p->elem = elem;
-    p->next = NULL;
-    return p;
+	link* p = (link*)malloc(sizeof(link));//´´½¨Ò»¸öÍ·½áµã
+	if (p == NULL) {
+		return NULL;
+	}
+	p->elem = elem;
+	p->next = NULL;
+	return p;
 }
 
 link* appendElem(link* p, Course elem) {
-    link* temp = p;//åˆ›å»ºä¸´æ—¶ç»“ç‚¹temp
-    // éå†é“¾è¡¨ï¼Œæ‰¾åˆ°æœ€åä¸€ä¸ª
-    for (;;) {
-        if (temp->next == NULL) {
-            break;
-        }
-        temp = temp->next;
-    }
-    //åˆ›å»ºæ’å…¥ç»“ç‚¹c
-    link* c = (link*)malloc(sizeof(link));
-    if (c == NULL) {
-        return NULL;
-    }
-    c->elem = elem;
-    //å‘é“¾è¡¨ä¸­æ·»åŠ ç»“ç‚¹
-    c->next = NULL;
-    temp->next = c;
-    return p;
+	link* temp = p;//´´½¨ÁÙÊ±½áµãtemp
+	// ±éÀúÁ´±í£¬ÕÒµ½×îºóÒ»¸ö
+	for (;;) {
+		if (temp->next == NULL) {
+			break;
+		}
+		temp = temp->next;
+	}
+	//´´½¨²åÈë½áµãc
+	link* c = (link*)malloc(sizeof(link));
+	if (c == NULL) {
+		return NULL;
+	}
+	c->elem = elem;
+	//ÏòÁ´±íÖĞÌí¼Ó½áµã
+	c->next = NULL;
+	temp->next = c;
+	return p;
 }
 
 link* insertElem(link* p, Course elem, int add) {
-    link* temp = p;//åˆ›å»ºä¸´æ—¶ç»“ç‚¹temp
-    //é¦–å…ˆæ‰¾åˆ°è¦æ’å…¥ä½ç½®çš„ä¸Šä¸€ä¸ªç»“ç‚¹
-    for (int i = 1; i < add; i++) {
-        if (temp == NULL) {
-            printf("æ’å…¥ä½ç½®æ— æ•ˆ\n");
-            return p;
-        }
-        temp = temp->next;
-    }
-    //åˆ›å»ºæ’å…¥ç»“ç‚¹c
-    link* c = (link*)malloc(sizeof(link));
-    if (c == NULL) {
-        return NULL;
-    }
-    c->elem = elem;
-    //å‘é“¾è¡¨ä¸­æ’å…¥ç»“ç‚¹
-    c->next = temp->next;
-    temp->next = c;
-    return  p;
+	link* temp = p;//´´½¨ÁÙÊ±½áµãtemp
+	//Ê×ÏÈÕÒµ½Òª²åÈëÎ»ÖÃµÄÉÏÒ»¸ö½áµã
+	for (int i = 1; i < add; i++) {
+		if (temp == NULL) {
+			printf("²åÈëÎ»ÖÃÎŞĞ§\n");
+			return p;
+		}
+		temp = temp->next;
+	}
+	//´´½¨²åÈë½áµãc
+	link* c = (link*)malloc(sizeof(link));
+	if (c == NULL) {
+		return NULL;
+	}
+	c->elem = elem;
+	//ÏòÁ´±íÖĞ²åÈë½áµã
+	c->next = temp->next;
+	temp->next = c;
+	return  p;
 }
 
 link* delElem(link* p, int add) {
-    link* temp = p;
-    //éå†åˆ°è¢«åˆ é™¤ç»“ç‚¹çš„ä¸Šä¸€ä¸ªç»“ç‚¹
-    for (int i = 1; i < add; i++) {
-        temp = temp->next;
-    }
-    link* del = temp->next;//å•ç‹¬è®¾ç½®ä¸€ä¸ªæŒ‡é’ˆæŒ‡å‘è¢«åˆ é™¤ç»“ç‚¹ï¼Œä»¥é˜²ä¸¢å¤±
-    temp->next = temp->next->next;//åˆ é™¤æŸä¸ªç»“ç‚¹çš„æ–¹æ³•å°±æ˜¯æ›´æ”¹å‰ä¸€ä¸ªç»“ç‚¹çš„æŒ‡é’ˆåŸŸ
-    free(del);//æ‰‹åŠ¨é‡Šæ”¾è¯¥ç»“ç‚¹ï¼Œé˜²æ­¢å†…å­˜æ³„æ¼
-    return p;
+	link* temp = p;
+	//±éÀúµ½±»É¾³ı½áµãµÄÉÏÒ»¸ö½áµã
+	for (int i = 1; i < add; i++) {
+		temp = temp->next;
+	}
+	link* del = temp->next;//µ¥¶ÀÉèÖÃÒ»¸öÖ¸ÕëÖ¸Ïò±»É¾³ı½áµã£¬ÒÔ·À¶ªÊ§
+	temp->next = temp->next->next;//É¾³ıÄ³¸ö½áµãµÄ·½·¨¾ÍÊÇ¸ü¸ÄÇ°Ò»¸ö½áµãµÄÖ¸ÕëÓò
+	free(del);//ÊÖ¶¯ÊÍ·Å¸Ã½áµã£¬·ÀÖ¹ÄÚ´æĞ¹Â©
+	return p;
 }
 
 
 link* updateElem(link* p, int add, Course newElem) {
-    link* temp = p;
-    for (int i = 0; i < add; i++) {
-        temp = temp->next;
-    }
-    temp->elem = newElem;
-    return p;
+	link* temp = p;
+	for (int i = 0; i < add; i++) {
+		temp = temp->next;
+	}
+	temp->elem = newElem;
+	return p;
 }
 
 link* updateElemByCourseIndex(link* p, int course_index, Course newElem) {
-    link* temp = p;
-    while (temp)
-    {
-        if (temp->elem.index == course_index) {
-            temp->elem = newElem;
-            break;
-        }
-        temp = temp->next;
-    }
-    return p;
+	link* temp = p;
+	while (temp)
+	{
+		if (temp->elem.index == course_index) {
+			temp->elem = newElem;
+			break;
+		}
+		temp = temp->next;
+	}
+	return p;
 }
 
-int getElemLength(link* p){
-    int count = 0;
-    link* temp = p;
-    while (temp)
-    {
-        temp = temp->next;
-        ++count;
-    }
-    return count;
+int getElemLength(link* p) {
+	int count = 0;
+	link* temp = p;
+	while (temp)
+	{
+		temp = temp->next;
+		++count;
+	}
+	return count;
 }
 
-Course getElem(link* p,int index){
-    Course c;
-    c.index = -1;
-    int count = 0;
-    link* temp = p;
-    while (temp)
-    {
-        if(count == index){
-            memcpy(&c,&(temp->elem),sizeof(Course));
-            break;
-        }
-        temp = temp->next;
-        ++count;
-    }
-    return c;
+Course getElem(link* p, int index) {
+	Course c;
+	c.index = -1;
+	int count = 0;
+	link* temp = p;
+	while (temp)
+	{
+		if (count == index) {
+			memcpy(&c, &(temp->elem), sizeof(Course));
+			break;
+		}
+		temp = temp->next;
+		++count;
+	}
+	return c;
 }
 
 Course getElemByCourseIndex(link* p, int index) {
-    Course c;
-    c.index = -1;
-    int count = 0;
-    link* temp = p;
-    while (temp)
-    {
-        if (temp->elem.index == index) {
-            memcpy(&c, &(temp->elem), sizeof(Course));
-            break;
-        }
-        temp = temp->next;
-        ++count;
-    }
-    return c;
+	Course c;
+	c.index = -1;
+	int count = 0;
+	link* temp = p;
+	while (temp)
+	{
+		if (temp->elem.index == index) {
+			memcpy(&c, &(temp->elem), sizeof(Course));
+			break;
+		}
+		temp = temp->next;
+		++count;
+	}
+	return c;
 }

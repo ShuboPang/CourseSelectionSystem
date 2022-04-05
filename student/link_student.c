@@ -5,121 +5,136 @@
 #include <string.h>
 
 linkStudent* initLink_student(Student elem) {
-    linkStudent* p = (linkStudent*)malloc(sizeof(linkStudent));//åˆ›å»ºä¸€ä¸ªå¤´ç»“ç‚¹
-    if(p == NULL) {
-        return NULL;
-    }
-    p->elem = elem;
-    p->next = NULL;
-    return p;
+	linkStudent* p = (linkStudent*)malloc(sizeof(linkStudent));//´´½¨Ò»¸öÍ·½áµã
+	if (p == NULL) {
+		return NULL;
+	}
+	p->elem = elem;
+	p->next = NULL;
+	return p;
 }
 
 linkStudent* appendElem_student(linkStudent* p, Student elem) {
-    linkStudent* temp = p;//åˆ›å»ºä¸´æ—¶ç»“ç‚¹temp
-    // éå†é“¾è¡¨ï¼Œæ‰¾åˆ°æœ€åä¸€ä¸ª
-    for (;;) {
-        if (temp->next == NULL) {
-            break;
-        }
-        temp = temp->next;
-    }
-    //åˆ›å»ºæ’å…¥ç»“ç‚¹c
-    linkStudent* c = (linkStudent*)malloc(sizeof(linkStudent));
-    if (c == NULL) {
-        return NULL;
-    }
-    c->elem = elem;
-    //å‘é“¾è¡¨ä¸­æ·»åŠ ç»“ç‚¹
-    c->next = NULL;
-    temp->next = c;
-    return p;
+	linkStudent* temp = p;//´´½¨ÁÙÊ±½áµãtemp
+	// ±éÀúÁ´±í£¬ÕÒµ½×îºóÒ»¸ö
+	for (;;) {
+		if (temp->next == NULL) {
+			break;
+		}
+		temp = temp->next;
+	}
+	//´´½¨²åÈë½áµãc
+	linkStudent* c = (linkStudent*)malloc(sizeof(linkStudent));
+	if (c == NULL) {
+		return NULL;
+	}
+	c->elem = elem;
+	//ÏòÁ´±íÖĞÌí¼Ó½áµã
+	c->next = NULL;
+	temp->next = c;
+	return p;
 }
 
 linkStudent* insertElem_student(linkStudent* p, Student elem, int add) {
-    linkStudent* temp = p;//åˆ›å»ºä¸´æ—¶ç»“ç‚¹temp
-    //é¦–å…ˆæ‰¾åˆ°è¦æ’å…¥ä½ç½®çš„ä¸Šä¸€ä¸ªç»“ç‚¹
-    for (int i = 1; i < add; i++) {
-        if (temp == NULL) {
-            printf("æ’å…¥ä½ç½®æ— æ•ˆ\n");
-            return p;
-        }
-        temp = temp->next;
-    }
-    //åˆ›å»ºæ’å…¥ç»“ç‚¹c
-    linkStudent* c = (linkStudent*)malloc(sizeof(linkStudent));
-    if (c == NULL) {
-        return NULL;
-    }
-    c->elem = elem;
-    //å‘é“¾è¡¨ä¸­æ’å…¥ç»“ç‚¹
-    c->next = temp->next;
-    temp->next = c;
-    return  p;
+	linkStudent* temp = p;//´´½¨ÁÙÊ±½áµãtemp
+	//Ê×ÏÈÕÒµ½Òª²åÈëÎ»ÖÃµÄÉÏÒ»¸ö½áµã
+	for (int i = 1; i < add; i++) {
+		if (temp == NULL) {
+			printf("²åÈëÎ»ÖÃÎŞĞ§\n");
+			return p;
+		}
+		temp = temp->next;
+	}
+	//´´½¨²åÈë½áµãc
+	linkStudent* c = (linkStudent*)malloc(sizeof(linkStudent));
+	if (c == NULL) {
+		return NULL;
+	}
+	c->elem = elem;
+	//ÏòÁ´±íÖĞ²åÈë½áµã
+	c->next = temp->next;
+	temp->next = c;
+	return  p;
 }
 
 linkStudent* delElem_student(linkStudent* p, int add) {
-    linkStudent* temp = p;
-    //éå†åˆ°è¢«åˆ é™¤ç»“ç‚¹çš„ä¸Šä¸€ä¸ªç»“ç‚¹
-    for (int i = 1; i < add; i++) {
-        temp = temp->next;
-    }
-    linkStudent* del = temp->next;//å•ç‹¬è®¾ç½®ä¸€ä¸ªæŒ‡é’ˆæŒ‡å‘è¢«åˆ é™¤ç»“ç‚¹ï¼Œä»¥é˜²ä¸¢å¤±
-    temp->next = temp->next->next;//åˆ é™¤æŸä¸ªç»“ç‚¹çš„æ–¹æ³•å°±æ˜¯æ›´æ”¹å‰ä¸€ä¸ªç»“ç‚¹çš„æŒ‡é’ˆåŸŸ
-    free(del);//æ‰‹åŠ¨é‡Šæ”¾è¯¥ç»“ç‚¹ï¼Œé˜²æ­¢å†…å­˜æ³„æ¼
-    return p;
+	linkStudent* temp = p;
+	//±éÀúµ½±»É¾³ı½áµãµÄÉÏÒ»¸ö½áµã
+	for (int i = 1; i < add; i++) {
+		temp = temp->next;
+	}
+	linkStudent* del = temp->next;//µ¥¶ÀÉèÖÃÒ»¸öÖ¸ÕëÖ¸Ïò±»É¾³ı½áµã£¬ÒÔ·À¶ªÊ§
+	temp->next = temp->next->next;//É¾³ıÄ³¸ö½áµãµÄ·½·¨¾ÍÊÇ¸ü¸ÄÇ°Ò»¸ö½áµãµÄÖ¸ÕëÓò
+	free(del);//ÊÖ¶¯ÊÍ·Å¸Ã½áµã£¬·ÀÖ¹ÄÚ´æĞ¹Â©
+	return p;
 }
 
 
 linkStudent* updateElem_student(linkStudent* p, int add, Student newElem) {
-    linkStudent* temp = p;
-    for (int i = 0; i < add; i++) {
-        temp = temp->next;
-    }
-    temp->elem = newElem;
-    return p;
+	linkStudent* temp = p;
+	for (int i = 0; i < add; i++) {
+		temp = temp->next;
+	}
+	temp->elem = newElem;
+	return p;
 }
 
-int getElemLength_student(linkStudent* p){
-    int count = 0;
-    linkStudent* temp = p;
-    while (p)
-    {
-        p = p->next;
-        ++count;
-    }
-    return count;
+linkStudent* updateElemByName_student(linkStudent* p, const char* name, Student newElem) {
+
+	linkStudent* temp = p;
+	while (temp)
+	{
+		if (strcmp(name, temp->elem.name) == 0) {
+			break;
+		}
+		temp = temp->next;
+	}
+	if (temp == NULL) {
+		return p;
+	}
+	temp->elem = newElem;
+	return p;
 }
 
-Student getElem_student(linkStudent* p,int index){
-    Student c;
-    c.index = -1;
-    int count = 0;
-    linkStudent* temp = p;
-    while (p)
-    {
-        if(count == index){
-            memcpy(&c,&(p->elem),sizeof(Student));
-            break;
-        }
-        p = p->next;
-        ++count;
-    }
-    return c;
+int getElemLength_student(linkStudent* p) {
+	int count = 0;
+	linkStudent* temp = p;
+	while (temp)
+	{
+		temp = temp->next;
+		++count;
+	}
+	return count;
+}
+
+Student getElem_student(linkStudent* p, int index) {
+	Student c;
+	c.index = -1;
+	int count = 0;
+	linkStudent* temp = p;
+	while (p)
+	{
+		if (count == index) {
+			memcpy(&c, &(p->elem), sizeof(Student));
+			break;
+		}
+		p = p->next;
+		++count;
+	}
+	return c;
 }
 
 Student getElemByName_student(linkStudent* p, const char* name) {
-    Student c;
-    c.index = -1;
-    int count = 0;
-    linkStudent* temp = p;
-    while (p)
-    {
-        if(strcmp(name, temp->elem.name)){
-            memcpy(&c, &(temp->elem), sizeof(Student));
-            break;
-        }
-        temp = temp->next;
-        ++count;
-    }
-    return c;
+	Student c;
+	c.index = -1;
+	linkStudent* temp = p;
+	while (temp)
+	{
+		if (strcmp(name, temp->elem.name) == 0) {
+			memcpy(&c, &(temp->elem), sizeof(Student));
+			break;
+		}
+		temp = temp->next;
+	}
+	return c;
 }
