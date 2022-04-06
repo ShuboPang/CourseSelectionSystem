@@ -81,7 +81,7 @@ int SelectionCourseOption() {
 /// <returns></returns>
 int SelectionCourseOption_display() {
 	ShowTitle("学生选课结果");
-	printf("编号  学生姓名  英文名字  课程编号1  课程编号2  课程编号3  课程编号4  已选课程数量  总学分 \n");
+	printf("编号 学生姓名  英文名字  课程编号1  课程编号2  课程编号3  课程编号4  已选课程数量  总学分 \n");
 	linkStudent* s = student_link;
 	linkStudent* student_temp = student_link;
 	int n = 0; 
@@ -94,29 +94,38 @@ int SelectionCourseOption_display() {
 		printf("暂无学生，请先添加学生\n");
 	} else {
 		int i, j;
+		Student temp;
+		Student* c = (Student*)malloc(sizeof(Student) * n);
+		for (i = 0; i < n; ++i) {
+			memcpy(&c[i], &student_temp->elem, sizeof(Student));
+			student_temp = student_temp->next;
+		}
+
 		// 冒泡排序 
-	    for (i = 0; i < n; ++i) {
-	        // 之前的循环已经将i个元素送到末尾，不需要再次比较，故减去，因为跟后一个元素比较，为了避免溢出，故减一
-	        for (j = 0; j < n - i - 1; ++j) {
-	            // 如果当前的元素比后一个元素小，就交换
-	            if (student_temp->elem.total > student_temp->next->elem.total) 
-				{
-	                s = student_temp;
-	            }
-	            else if(student_temp->elem.total < student_temp->next->elem.total){
-					s = student_temp->next;
-				}
-				else if(student_temp->elem.total == student_temp->next->elem.total)
-				{
-					if(strcmp(student_temp->elem.english_name, student_temp->next->elem.english_name) > 0){
-						s = student_temp->next;
+	    for (i = 0; i < n - 1; ++i) {
+	        for (j = i; j < n - i - 1; ++j) {
+	            // 如果当前的元素比后一个元素大，就交换
+	            if(c[j].total > c[j+1].total){
+	            	memcpy(&temp, &c[j+1], sizeof(Student));
+	            	memcpy(&c[j+1], &c[j], sizeof(Student));
+	            	memcpy(&c[j], &temp, sizeof(Student));
+				} 
+				else if(c[j].total == c[j+1].total) {
+					if(strcmp(c[j].english_name, c[j+1].english_name) > 0){
+						memcpy(&temp, &c[j+1], sizeof(Student));
+	            		memcpy(&c[j+1], &c[j], sizeof(Student));
+	            		memcpy(&c[j], &temp, sizeof(Student));
 					}
 				}
 	        }
-			printf("%d 	  %s 	%s 	 %d 	%d 		%d 		%d 		%d 		%d\n", s->elem.index, s->elem.name, s->elem.english_name,
-				s->elem.course[0], s->elem.course[1],
-				s->elem.course[2], s->elem.course[3], s->elem.course_num, s->elem.total);
 	    }
+	    
+	    for(j = 0; j < n; j++){
+	    	printf("%d\t%s\t%s  \t    %d\t\t%d   \t %d    \t %d  \t  %d  \t  %d\n",
+					c[j].index, c[j].name, c[j].english_name,
+					c[j].course[0], c[j].course[1],c[j].course[2],
+					c[j].course[3], c[j].course_num, c[j].total);
+		}			
 	}
 	printf("--------------------------------------------------------------------------------------------\n");
 	printf("\n");
@@ -132,7 +141,7 @@ int electionCourseOption_sel() {
 	link* s = course_link;
 	while (s)
 	{
-		printf("%d 		%s 		%d 		%d 		%d 		%d 		%d    %d     %d\n",
+		printf("%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
 			s->elem.index, s->elem.name, s->elem.type,
 			s->elem.total_time, s->elem.teach_time,
 			s->elem.test_time, s->elem.credit, s->elem.person_num, s->elem.num);
@@ -154,6 +163,7 @@ START_SEL:
 	sprintf(st.english_name, "%s", "null");
 
 	if (student_link == NULL) {
+		st.index = 0;
 		student_link = initLink_student(st);
 	}
 	else
@@ -163,6 +173,16 @@ START_SEL:
 			memcpy(&st, &tmp, sizeof(Student));
 		}
 		else {
+			int num = 0;
+			linkStudent *temp = student_link;
+			for (;;) {
+				if (temp->next == NULL) {
+					break;
+				}
+				temp = temp->next;
+				num++;
+			}
+			st.index = num;
 			appendElem_student(student_link, st);
 		}
 	}
@@ -350,11 +370,11 @@ INPUT_ERROR:
 int DisplayShowCourse() {
 	ShowTitle("课程列表");
 	printf("课程总数 %d \n", getElemLength(course_link));
-	printf("课程编号   课程名称 课程性质 总学时 授课学时 实验或上机学时  学分 课程容量 已选人数\n");
+	printf("课程编号\t课程名称\t课程性质\t总学时\t授课学时\t实验或上机学时\t学分\t课程容量\t已选人数\n");
 	link* s = course_link;
 	while (s)
 	{
-		printf("%d 		%s 		%d 		%d 		%d 		%d 		%d     %d    %d\n",
+		printf("%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
 			s->elem.index, s->elem.name, s->elem.type,
 			s->elem.total_time, s->elem.teach_time,
 			s->elem.test_time, s->elem.credit, s->elem.person_num, s->elem.num);
