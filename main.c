@@ -57,7 +57,6 @@ int FirstPage() {
 	ShowTitle("欢迎使用学生管理系统");
 	printf("		1. 进入选课 \n");
 	printf("		2. 课程操作 \n");
-	printf("		3. 学生管理 \n");
 	printf("		0. 退出 \n");
 	return ShowOptionSel();
 }
@@ -71,6 +70,19 @@ int SelectionCourseOption() {
 	printf("		1. 显示学生选课结果 \n");
 	printf("		2. 开始选课 \n");
 	printf("		3. 查询 \n");
+	printf("		0. 退出 \n");
+	return ShowOptionSel();
+}
+
+/// <summary>
+/// 学生操作
+/// </summary>
+/// <returns></returns>
+int StudentManageOption() {
+	ShowTitle("学生操作");
+	printf("		1. 显示学生 \n");
+	printf("		2. 添加学生 \n");
+	printf("		3. 删除学生 \n");
 	printf("		0. 退出 \n");
 	return ShowOptionSel();
 }
@@ -150,17 +162,17 @@ int electionCourseOption_sel() {
 START_SEL:
 	printf("\n");
 	printf("\n");
-	printf("请输入学生姓名 课程编号\n");
+	printf("请输入学生姓名 英文名字 课程编号\n");
 	char stu[128];
+	char stuE[128];
 	int course_index = 0;
-	scanf("%s %d", &stu, &course_index);
+	scanf("%s %s %d", &stu, &stuE, &course_index);
 
 
-	//< 检查学生
 	Student st;
 	memset(&st, 0, sizeof(Student));
 	memcpy(&st.name, &stu, sizeof(stu));
-	sprintf(st.english_name, "%s", "null");
+	memcpy(&st.english_name, &stuE, sizeof(stuE));
 
 	if (student_link == NULL) {
 		st.index = 0;
@@ -387,7 +399,6 @@ int DisplayShowCourse() {
 	return ShowOptionSel();
 }
 
-
 int main(int argc, char* argv[]) {
 
 	int step = 0;
@@ -421,9 +432,6 @@ MAIN_MENU:
 		}
 		else if (substep == 4) {		//< 删除课程
 			CourseOption_delete();
-		}
-		else if (substep == 5) {
-			
 		}
 		else {
 			InputErrorTip();
